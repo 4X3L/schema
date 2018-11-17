@@ -1,14 +1,17 @@
-(defpackage #:schema
+(defpackage #:unifier
   (:documentation "An implmentation of schema based reasoning.")
   (:use :common-lisp
         :trivia
 	:fol)
   (:export most-general-unifier))
 
-(in-package :schema)
-(import 'fol:fol-variable
-	'fol:fol-function
-	'fol:fol-predicate)
+(in-package :unifier)
+(import 'fol:fol-variable)
+(import 'fol:fol-function)
+(import 'fol:fol-predicate)
+(import 'fol:name)
+(import 'fol:args)
+(import 'fol:fol-eq)
 (declaim (optimize (speed 0) (space 0) (safety 3) (debug 3)))
 
 (defstruct unifier

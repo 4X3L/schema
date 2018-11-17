@@ -13,7 +13,8 @@
     :licence "GPLv3"
     :description "Schema Reasoning"
     :long-description "Implementing schema based logical reasoning"
-    :depends-on ("alexandria" "trivia")
-    :components ((:file "schema")
-		 (:file "main" :depends-on ("schema")))
-    :entry-point "schema:main")
+    :depends-on ("trivia")
+    :components ((:file "fol")
+		 (:file "unifier" :depends-on ("fol"))
+		 (:file "main" :depends-on ("unifier" "fol")))
+    :entry-point "main:main")
