@@ -76,7 +76,6 @@
   (setf (gethash k (unifier-renames u)) (find-sym-rename u v))
   v)
 (defun find-sym-rename (u name)
-  (break)
   (let ((rename (gethash name (unifier-renames u))))
     (if rename
         (if (equalp rename name)
@@ -112,33 +111,33 @@
                        (make-instance 'fol-function
                                       :name n
                                       :args (mapcar (lambda (x) (replace-lit-in lit x))
-                                                    x)))
+                                                    a)))
                       ((class fol-predicate (name n) (args a))
                        (make-instance 'fol-predicate
                                       :name n
                                       :args (mapcar (lambda (x) (replace-lit-in lit x))
-                                                    x)))
+                                                    a)))
                       (_ (error "Not a variable, function, or predicate."))
-                      ))))
-      (unify-values (v w)
-                    (let ((new-name
-                           (match v
-                                  ((class fol-variable (name x))
-                                   (set-name x w))
-                                  ((class fol-function (name n) (args x))
-                                   (match w
-                                          ((class fol-function (name m) (args y))
-                                           (if (equalp n m)
-                                               (make-instance 'fol-function :name n :args (mapcar #'unify-values x y))
-                                               (error "Could not unify functions with different names")))))
-                                  (_
-                                   (match w
-                                          ((class fol-variable (name y))
-                                           (set-name y v))
-                                          (_ (error "Could not unify variables")))))))
-                      (setf a (replace-lit-in new-name a))
-                      (setf b (replace-lit-in new-name b))
-                      new-name)))
-    (if (equal a-name b-name)
-        (make-instance 'fol-pred :name a-name :args (mapcar #'unify-values a-args b-args))
-        (error "Cannot unify different predicates"))))
+                      )))
+	 (unify-values (v w)
+           (let ((new-name
+                  (match v
+                    ((class fol-variable (name x))
+                     (set-name x w))
+                    ((class fol-function (name n) (args x))
+                     (match w
+                       ((class fol-function (name m) (args y))
+                        (if (equalp n m)
+                            (make-instance 'fol-function :name n :args (mapcar #'unify-values x y))
+                            (error "Could not unify functions with different names")))))
+                    (_
+                     (match w
+                       ((class fol-variable (name y))
+                        (set-name w y))
+                       (_ (error "Could not unify variables")))))))
+             (setf a (replace-lit-in new-name a))
+             (setf b (replace-lit-in new-name b))
+             new-name)))
+      (if (equal a-name b-name)
+          (make-instance 'fol-predicate :name a-name :args (mapcar #'unify-values a-args b-args))
+          (error "Cannot unify different predicates")))))
